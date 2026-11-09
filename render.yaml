@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: aics-ai
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: OLLAMA_BASE_URL
+        value: https://ollama.com
+      - key: OLLAMA_MODEL
+        value: gemma4:31b
+      - key: ALLOWED_ORIGINS
+        value: https://aicsrepo.github.io
+      - key: OLLAMA_API_KEY
+        sync: false

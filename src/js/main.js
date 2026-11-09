@@ -690,6 +690,8 @@ function copyLatex(button) {
 }
 
 
+const AI_API_URL = (import.meta.env.VITE_AI_API_URL || 'http://127.0.0.1:3001').replace(/\/+$/, '');
+
 // =========================================
 // AI ASSISTANT
 // =========================================
@@ -704,26 +706,26 @@ async function askAssistant(text) {
   render();
 
   try {
-    const response = await fetch('http://127.0.0.1:3001/api/chat', {
+    const response = await fetch(`${AI_API_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: text, context }),
     });
 
     if (!response.ok) {
-      throw new Error(`Local AI server returned ${response.status}`);
+      throw new Error(`AI server returned ${response.status}`);
     }
 
     const data = await response.json();
     chatMessages.push({
       role: 'assistant',
-      text: data.answer || 'Llama returned an empty response.',
+      text: data.answer || 'The AI provider returned an empty response.',
     });
   } catch (error) {
-    console.error('Llama request failed:', error);
+    console.error('AI request failed:', error);
     chatMessages.push({
       role: 'assistant',
-      text: `${answerQuestion(text, context)}\n\n(Llama couldn’t be reached, so I used the built-in assistant.)`,
+      text: `${answerQuestion(text, context)}\n\n(The AI service couldn’t be reached, so I used the built-in assistant.)`,
     });
   } finally {
     chatBusy = false;
