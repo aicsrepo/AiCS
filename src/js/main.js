@@ -885,6 +885,10 @@ app.addEventListener('click', (event) => {
       hypActive = !hypActive;
       break;
 
+    case 'insert-dms':
+      calculator.insertDms();
+      break;
+      
     case 'insert-ans':
       calculator.insertAns();
       break;
