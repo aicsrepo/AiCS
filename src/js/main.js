@@ -694,30 +694,42 @@ function copyLatex(button) {
 // AI ASSISTANT
 // =========================================
 
-function askAssistant(text) {
-  chatMessages.push({
-    role: 'user',
-    text,
-  });
+async function askAssistant(text) {
+  chatMessages.push({ role: 'user', text });
 
-  const {
-    latest,
-    angleMode,
-    precision,
-  } = calculator.getState();
+  const { latest, angleMode, precision } = calculator.getState();
+  const context = { latest, angleMode, precision };
 
-  chatMessages.push({
-    role: 'assistant',
-    text: answerQuestion(text, {
-      latest,
-      angleMode,
-      precision,
-    }),
-  });
-
+  chatBusy = true;
   render();
-}
 
+  try {
+    const response = await fetch('http://127.0.0.1:3001/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, context }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Local AI server returned ${response.status}`);
+    }
+
+    const data = await response.json();
+    chatMessages.push({
+      role: 'assistant',
+      text: data.answer || 'Llama returned an empty response.',
+    });
+  } catch (error) {
+    console.error('Llama request failed:', error);
+    chatMessages.push({
+      role: 'assistant',
+      text: `${answerQuestion(text, context)}\n\n(Llama couldn’t be reached, so I used the built-in assistant.)`,
+    });
+  } finally {
+    chatBusy = false;
+    render();
+  }
+}
 
 function explainLatest() {
   const {
