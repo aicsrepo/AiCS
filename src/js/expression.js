@@ -148,8 +148,16 @@ function parse(tokens) {
   return ast;
 }
 
+function normalizeDms(source) {
+  return source.replace(
+    /(\d+(?:\.\d+)?)\s*°(?:\s*(\d+(?:\.\d+)?)\s*['′](?:\s*(\d+(?:\.\d+)?)\s*["″])?)?/g,
+    (_, degrees, minutes, seconds) =>
+      `(${degrees}+${minutes ?? 0}/60+${seconds ?? 0}/3600)`,
+  );
+}
+
 export function parseExpression(source) {
-  const tokens = tokenize(source);
+  const tokens = tokenize(normalizeDms(source));
   if (tokens.length === 0) throw new Error('Nothing to calculate');
 
   const openDepth = tokens.reduce(
