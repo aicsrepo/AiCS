@@ -49,6 +49,30 @@ export function toFraction(value, maxDenominator = 10000) {
   return null;
 }
 
+function insertDms() {
+  if (!/\d$/.test(expression)) return;
+
+  const boundary = Math.max(
+    expression.lastIndexOf('+'),
+    expression.lastIndexOf('-'),
+    expression.lastIndexOf('*'),
+    expression.lastIndexOf('/'),
+    expression.lastIndexOf('^'),
+    expression.lastIndexOf('('),
+  );
+  const currentPart = expression.slice(boundary + 1);
+
+  const marker = !currentPart.includes('°')
+    ? '°'
+    : !currentPart.includes('′')
+      ? '′'
+      : !currentPart.includes('″')
+        ? '″'
+        : '°';
+
+  insert(marker);
+}
+
 export function createCalculator({ precision = 12, history: initialHistory = [] } = {}) {
   let expression = '';
   let angleMode = ANGLE_MODES.DEG;
