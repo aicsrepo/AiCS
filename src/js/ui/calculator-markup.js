@@ -17,7 +17,7 @@ const FUNCTION_KEYS = [
   { label: 'ln', value: 'ln(', shiftLabel: 'e^▫', shiftValue: 'exp(' },
 
   { label: '(−)', value: '(-', alphaLabel: 'A' },
-  { label: '° ′ ″', disabled: true, alphaLabel: 'B' },
+  { label: '° ′ ″', action: 'insert-dms', alphaLabel: 'B' },
   { label: 'hyp', action: 'toggle-hyp', alphaLabel: 'C' },
   { label: 'sin', value: 'sin(', shiftLabel: 'sin⁻¹', shiftValue: 'asin(', hypValue: 'sinh(', alphaLabel: 'D' },
   { label: 'cos', value: 'cos(', shiftLabel: 'cos⁻¹', shiftValue: 'acos(', hypValue: 'cosh(', alphaLabel: 'E' },
