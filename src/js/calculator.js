@@ -49,30 +49,6 @@ export function toFraction(value, maxDenominator = 10000) {
   return null;
 }
 
-function insertDms() {
-  if (!/\d$/.test(expression)) return;
-
-  const boundary = Math.max(
-    expression.lastIndexOf('+'),
-    expression.lastIndexOf('-'),
-    expression.lastIndexOf('*'),
-    expression.lastIndexOf('/'),
-    expression.lastIndexOf('^'),
-    expression.lastIndexOf('('),
-  );
-  const currentPart = expression.slice(boundary + 1);
-
-  const marker = !currentPart.includes('°')
-    ? '°'
-    : !currentPart.includes('′')
-      ? '′'
-      : !currentPart.includes('″')
-        ? '″'
-        : '°';
-
-  insert(marker);
-}
-
 export function createCalculator({ precision = 12, history: initialHistory = [] } = {}) {
   let expression = '';
   let angleMode = ANGLE_MODES.DEG;
@@ -128,27 +104,47 @@ export function createCalculator({ precision = 12, history: initialHistory = [] 
     }
     error = null;
 
-    // --- GUARD AGAINST DOUBLE OPERATORS & MULTIPLE DOTS ---
     const operators = ['+', '-', '*', '/', '×', '÷', '^', '%'];
     const lastChar = expression.slice(-1);
 
-    // 1. If trying to insert an operator when the last character is already an operator, replace it
     if (operators.includes(lastChar) && operators.includes(text)) {
       expression = expression.slice(0, -1) + text;
       return;
     }
 
-    // 2. Prevent consecutive decimal points in the same number block (e.g., "12.3.4")
     if (text === '.') {
       const segments = expression.split(/[\+\-\*\/\×\÷\^%]/);
       const currentSegment = segments[segments.length - 1];
       if (currentSegment.includes('.')) {
-        return; // Ignore duplicate dot
+        return;
       }
     }
-    // ------------------------------------------------------
 
     expression += text;
+  }
+
+  function insertDms() {
+    if (!/\d$/.test(expression)) return;
+
+    const boundary = Math.max(
+      expression.lastIndexOf('+'),
+      expression.lastIndexOf('-'),
+      expression.lastIndexOf('*'),
+      expression.lastIndexOf('/'),
+      expression.lastIndexOf('^'),
+      expression.lastIndexOf('('),
+    );
+
+    const currentPart = expression.slice(boundary + 1);
+    const marker = !currentPart.includes('°')
+      ? '°'
+      : !currentPart.includes('′')
+        ? '′'
+        : !currentPart.includes('″')
+          ? '″'
+          : '°';
+
+    insert(marker);
   }
 
   function backspace() {
@@ -235,7 +231,6 @@ export function createCalculator({ precision = 12, history: initialHistory = [] 
     error = null;
   }
 
-  // Numerical derivative of the current expression with respect to x, at x = 1.
   function derivative() {
     if (!expression) return;
     const source = expression;
@@ -252,7 +247,6 @@ export function createCalculator({ precision = 12, history: initialHistory = [] 
     }
   }
 
-  // Numerical integral of the current expression with respect to x, from 0 to 1 (Simpson's rule).
   function integral() {
     if (!expression) return;
     const source = expression;
@@ -282,7 +276,6 @@ export function createCalculator({ precision = 12, history: initialHistory = [] 
     variables[String(name).toLowerCase()] = value;
   }
 
-  // direction: 1 = older entry, -1 = newer entry.
   function replay(direction) {
     if (history.length === 0) return;
     const next = Math.min(Math.max(replayIndex + direction, 0), history.length - 1);
@@ -336,6 +329,7 @@ export function createCalculator({ precision = 12, history: initialHistory = [] 
 
   return {
     insert,
+    insertDms,
     backspace,
     clear,
     equals,
