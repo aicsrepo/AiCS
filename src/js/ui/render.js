@@ -75,33 +75,6 @@ export function historyHtml(history) {
   }).join('');
 }
 
-export function messagesHtml(messages, busy) {
-  if (messages.length === 0 && !busy) {
-    return `
-      <p class="empty-state">
-        Ask a math question, or use "Explain last result"
-        for step-by-step help.
-      </p>
-    `;
-  }
-
-  const items = messages.map((message) => `
-    <div class="message message--${escapeHtml(message.role)}">
-      <p>${escapeHtml(message.text)}</p>
-    </div>
-  `);
-
-  if (busy) {
-    items.push(`
-      <div class="message message--pending">
-        <p>Thinking...</p>
-      </div>
-    `);
-  }
-
-  return items.join('');
-}
-
 export function graphWorkspaceHtml() {
   return `
       <section class="graph-workspace">
@@ -186,20 +159,6 @@ export function appShellHtml() {
 
         <div class="header-brand">
           <h1 class="app-title">AiCS</h1>
-        </div>
-
-        <div class="header-actions">
-
-          <div
-            class="connection"
-            id="connection"
-            data-state="checking"
-            role="status"
-          >
-            <span class="connection-dot" aria-hidden="true"></span>
-            <span id="connection-label">AI Online</span>
-          </div>
-
         </div>
 
       </header>
@@ -327,6 +286,15 @@ export function appShellHtml() {
             <div class="calculator-workspace">
 
               ${calculatorCardHtml()}
+
+              <aside class="solution-panel card" aria-labelledby="solution-title">
+                <header class="solution-header">
+                  <p class="eyebrow">Calculation steps</p>
+                  <h2 id="solution-title">How it’s solved</h2>
+                </header>
+                <p class="solution-empty" id="solution-empty">Complete a calculation to see the steps.</p>
+                <pre class="solution-steps" id="solution-steps" aria-live="polite" hidden></pre>
+              </aside>
 
               <div id="mode-panel" hidden></div>
 
@@ -526,86 +494,6 @@ export function appShellHtml() {
 
       </div>
 
-      <!-- FLOATING AI CHAT -->
-
-      <section
-        class="ai-panel is-collapsed"
-        id="ai-panel"
-      >
-
-        <div class="ai-chat-header">
-
-          <div class="ai-chat-identity">
-
-            <div class="ai-avatar">AI</div>
-
-            <div>
-              <h2>AI Assistant</h2>
-              <span>Mathematics assistant</span>
-            </div>
-
-          </div>
-
-          <div class="ai-chat-actions">
-
-            <button
-              type="button"
-              class="icon-button"
-              data-action="toggle-ai"
-              aria-label="Minimize AI chat"
-            >−</button>
-
-          </div>
-
-        </div>
-
-        <div class="ai-panel-content" id="ai-panel-content">
-
-          <div class="ai-chat-tools">
-
-            <button
-              type="button"
-              class="text-button"
-              id="explain"
-              data-action="explain"
-            >Explain last result</button>
-
-          </div>
-
-          <div class="chat-log" id="chat-log"></div>
-
-          <form class="chat-form" id="chat-form">
-
-            <input
-              id="chat-input"
-              type="text"
-              autocomplete="off"
-              placeholder="Ask a math question..."
-              aria-label="Message to the AI assistant"
-            />
-
-            <button
-              type="submit"
-              class="button button--primary"
-              id="chat-send"
-            >Send</button>
-
-          </form>
-
-        </div>
-
-      </section>
-
-      <!-- AI LAUNCHER -->
-
-      <button
-        type="button"
-        class="ai-launcher"
-        data-action="toggle-ai"
-        aria-label="Open AI assistant"
-        title="AI Assistant"
-      >AI</button>
-
       <!-- SETTINGS DIALOG -->
 
       <dialog
@@ -685,8 +573,7 @@ export function appShellHtml() {
             </label>
 
             <p class="settings-note">
-              The AI assistant is built in and works offline —
-              no server or internet needed.
+              Calculation steps are generated locally from the expression. No AI service or internet connection is needed.
             </p>
 
           </div>

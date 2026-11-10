@@ -166,38 +166,6 @@ button {
   gap: 10px;
 }
 
-.connection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .8rem;
-  color: var(--text-muted);
-}
-
-.connection-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-muted);
-}
-
-.connection[data-state="online"] {
-  color: var(--success);
-}
-
-.connection[data-state="online"] .connection-dot {
-  background: var(--success);
-  box-shadow: 0 0 0 4px rgba(74, 222, 128, .13);
-}
-
-.connection[data-state="offline"] {
-  color: var(--warning);
-}
-
-.connection[data-state="offline"] .connection-dot {
-  background: var(--warning);
-}
-
 /* =========================================================
    PREMIUM BUTTON SYSTEM
    ========================================================= */
@@ -672,7 +640,6 @@ textarea,
   border-radius: 12px;
 }
 
-.chat-form input,
 .function-form input,
 .form-field input,
 .form-field select,
@@ -690,7 +657,6 @@ textarea,
     background var(--transition);
 }
 
-.chat-form input:focus,
 .function-form input:focus,
 .form-field input:focus,
 .form-field select:focus,
@@ -1125,270 +1091,6 @@ textarea::placeholder {
 
 .graph-backdrop {
   display: none !important;
-}
-
-/* =========================================================
-   FLOATING AI ASSISTANT
-   ========================================================= */
-
-.ai-panel {
-  position: fixed;
-  right: 24px;
-  bottom: 90px;
-  z-index: 1000;
-
-  display: flex;
-  flex-direction: column;
-
-  width: 360px;
-  max-width: calc(100vw - 32px);
-  height: 480px;
-  max-height: calc(100vh - 120px);
-
-  overflow: hidden;
-
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 23px;
-
-  backdrop-filter: blur(32px) saturate(160%);
-  -webkit-backdrop-filter: blur(32px) saturate(160%);
-
-  box-shadow:
-    0 20px 70px rgba(0, 0, 0, .45),
-    inset 0 1px 0 rgba(255, 255, 255, .08);
-
-  animation: ai-window-in 240ms cubic-bezier(.2, .8, .2, 1);
-}
-
-.ai-panel.is-collapsed {
-  display: none;
-}
-
-@keyframes ai-window-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.ai-chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 14px 16px;
-
-  background: rgba(255, 255, 255, .045);
-  border-bottom: 1px solid var(--border);
-}
-
-.ai-chat-identity {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.ai-avatar {
-  display: grid;
-  place-items: center;
-
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid rgba(255, 255, 255, .20);
-  border-radius: 50%;
-
-  background: linear-gradient(145deg, #75adff, #3979e8);
-  color: #fff;
-  font-weight: 800;
-
-  box-shadow: 0 3px 15px rgba(52, 120, 246, .25);
-}
-
-.ai-chat-identity h2 {
-  margin: 0;
-  color: var(--text);
-  font-size: .9rem;
-}
-
-.ai-chat-identity span {
-  color: var(--text-muted);
-  font-size: .7rem;
-}
-
-.ai-chat-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.ai-panel-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.ai-chat-tools {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
-}
-
-.chat-log {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 10px;
-
-  min-height: 0;
-  height: 280px;
-
-  overflow-y: auto;
-  padding: 14px;
-}
-
-.message {
-  max-width: 88%;
-  animation: message-in 200ms ease-out;
-}
-
-.message p {
-  margin: 0;
-  padding: 10px 13px;
-
-  border-radius: 13px;
-
-  font-size: .9rem;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.message--user {
-  align-self: flex-end;
-}
-
-.message--user p {
-  background: linear-gradient(145deg, #5797fa, #2866d8);
-  color: #fff;
-
-  border-bottom-right-radius: 5px;
-}
-
-.message--assistant {
-  align-self: flex-start;
-}
-
-.message--assistant p {
-  background: rgba(255, 255, 255, .075);
-  color: var(--text);
-
-  border-bottom-left-radius: 5px;
-}
-
-.message--error {
-  align-self: flex-start;
-}
-
-.message--error p {
-  background: rgba(248, 113, 113, .12);
-  color: #fecaca;
-}
-
-.message--pending {
-  align-self: flex-start;
-}
-
-.message--pending p {
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.chat-form {
-  display: flex;
-  gap: 8px;
-
-  margin-top: 0;
-  padding: 12px;
-
-  background: rgba(255, 255, 255, .035);
-  border-top: 1px solid var(--border);
-}
-
-.chat-form input {
-  flex: 1;
-  min-width: 0;
-  height: 44px;
-  padding: 0 13px;
-
-  border: 1px solid var(--border);
-  border-radius: 13px;
-
-  background: color-mix(in srgb, var(--display-bg) 80%, transparent);
-}
-
-.chat-form input:disabled {
-  opacity: .6;
-}
-
-.chat-form .button {
-  height: 44px;
-}
-
-/* Floating AI launcher */
-
-.ai-launcher {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 1001;
-
-  display: grid;
-  place-items: center;
-
-  width: 60px;
-  height: 60px;
-
-  border: 1px solid rgba(255, 255, 255, .22);
-  border-radius: 50%;
-
-  background: linear-gradient(145deg, #75adff, #3979e8);
-  color: #fff;
-
-  font-size: 17px;
-  font-weight: 800;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 8px 30px rgba(52, 120, 246, .34),
-    inset 0 1px 0 rgba(255, 255, 255, .25);
-
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition),
-    filter var(--transition);
-}
-
-.ai-launcher:hover {
-  transform: translateY(-3px) scale(1.05);
-  filter: brightness(1.1);
-
-  box-shadow:
-    0 12px 35px rgba(52, 120, 246, .45),
-    inset 0 1px 0 rgba(255, 255, 255, .30);
-}
-
-.ai-launcher:active {
-  transform: scale(.94);
-}
-
-.ai-panel:not(.is-collapsed) + .ai-launcher {
-  display: none;
 }
 
 /* =========================================================
@@ -2096,19 +1798,6 @@ textarea::placeholder {
     flex-direction: column;
   }
 
-  .ai-panel {
-    right: 12px;
-    bottom: 82px;
-    width: calc(100vw - 24px);
-    height: min(480px, calc(100vh - 100px));
-  }
-
-  .ai-launcher {
-    right: 16px;
-    bottom: 16px;
-    width: 55px;
-    height: 55px;
-  }
 }
 
 /* =========================================================
@@ -2222,7 +1911,6 @@ body,
 .graph-card,
 .function-panel,
 .reference-card,
-.ai-panel,
 .settings-dialog,
 .confirm-dialog {
   background: var(--glass-fill);
@@ -2304,7 +1992,6 @@ body,
   border: 1px solid var(--glass-edge);
 }
 
-.chat-form input,
 .function-form input,
 .form-field input,
 .form-field select,

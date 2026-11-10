@@ -1,14 +1,11 @@
 // Entry point: wires the calculator, graph workspace,
-// AI assistant, themes and application interface.
+// calculation steps, themes and application interface.
 
 import '../css/style.css';
 
 import { createCalculator } from './calculator.js';
 
-import {
-  answerQuestion,
-  explainCalculation,
-} from './ai-brain.js';
+import { explainCalculation } from './calculation-steps.js';
 
 import {
   loadHistory,
@@ -18,7 +15,6 @@ import {
 import {
   appShellHtml,
   historyHtml,
-  messagesHtml,
   prettyExpression,
   escapeHtml,
   formatTimestamp,
@@ -70,9 +66,6 @@ const themeManager = initTheme(app);
 // =========================================
 
 const el = {
-  connection: query('#connection'),
-  connectionLabel: query('#connection-label'),
-
   display: query('#display'),
   displayExpression: query('#display-expression'),
   displayResult: query('#display-result'),
@@ -89,11 +82,8 @@ const el = {
   clearDialog: query('#clear-dialog'),
   clearDialogText: query('#clear-dialog-text'),
 
-  explain: query('#explain'),
-  chatLog: query('#chat-log'),
-  chatForm: query('#chat-form'),
-  chatInput: query('#chat-input'),
-  chatSend: query('#chat-send'),
+  solutionEmpty: query('#solution-empty'),
+  solutionSteps: query('#solution-steps'),
 
   settingsDialog: query('#settings-dialog'),
   settingsForm: query('#settings-form'),
@@ -182,11 +172,6 @@ const modeManager = createModeManager({
 });
 
 let persistedHistory = initialHistory;
-
-let chatMessages = [];
-
-let chatBusy = false;
-
 
 // =========================================
 // NOTES STORAGE
@@ -614,29 +599,15 @@ function render() {
   el.clearHistory.disabled =
     state.history.length === 0;
 
-  // AI connection status.
-
-  el.connection.dataset.state = 'online';
-
-  el.connectionLabel.textContent = 'AI ready';
-
-  // AI chat.
-
-  const canChat = !chatBusy;
-
-  el.chatInput.disabled = !canChat;
-  el.chatSend.disabled = !canChat;
-
-  el.chatInput.placeholder = 'Ask a math question';
-
-  el.explain.disabled =
-    !canChat || state.latest === null;
-
-  el.chatLog.innerHTML =
-    messagesHtml(chatMessages, chatBusy);
-
-  el.chatLog.scrollTop =
-    el.chatLog.scrollHeight;
+  const steps = state.latest
+    ? explainCalculation(state.latest, {
+      angleMode: state.angleMode,
+      precision: state.precision,
+    })
+    : '';
+  el.solutionEmpty.hidden = Boolean(steps);
+  el.solutionSteps.hidden = !steps;
+  el.solutionSteps.textContent = steps;
 }
 
 
@@ -687,75 +658,6 @@ function copyLatex(button) {
 
   const result = state.isError ? '' : ` = ${state.display}`;
   copyToClipboard(`${latex}${result}`, button);
-}
-
-
-const AI_API_URL = (import.meta.env.VITE_AI_API_URL || 'http://127.0.0.1:3001').replace(/\/+$/, '');
-
-// =========================================
-// AI ASSISTANT
-// =========================================
-
-async function askAssistant(text) {
-  chatMessages.push({ role: 'user', text });
-
-  const { latest, angleMode, precision } = calculator.getState();
-  const context = { latest, angleMode, precision };
-
-  chatBusy = true;
-  render();
-
-  try {
-    const response = await fetch(`${AI_API_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, context }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`AI server returned ${response.status}`);
-    }
-
-    const data = await response.json();
-    chatMessages.push({
-      role: 'assistant',
-      text: data.answer || 'The AI provider returned an empty response.',
-    });
-  } catch (error) {
-    console.error('AI request failed:', error);
-    chatMessages.push({
-      role: 'assistant',
-      text: `${answerQuestion(text, context)}\n\n(The AI service couldn’t be reached, so I used the built-in assistant.)`,
-    });
-  } finally {
-    chatBusy = false;
-    render();
-  }
-}
-
-function explainLatest() {
-  const {
-    latest,
-    angleMode,
-    precision,
-  } = calculator.getState();
-
-  if (!latest) return;
-
-  chatMessages.push({
-    role: 'user',
-    text: `Explain: ${prettyExpression(latest.expression)} = ${latest.display}`,
-  });
-
-  chatMessages.push({
-    role: 'assistant',
-    text: explainCalculation(latest, {
-      angleMode,
-      precision,
-    }),
-  });
-
-  render();
 }
 
 
@@ -1021,23 +923,6 @@ app.addEventListener('click', (event) => {
       return;
 
 
-    // AI ASSISTANT
-
-    case 'explain':
-      explainLatest();
-      return;
-
-    case 'toggle-ai': {
-      const panel = query('#ai-panel');
-
-      if (panel) {
-        panel.classList.toggle('is-collapsed');
-      }
-
-      return;
-    }
-
-
     // NOTES
 
     case 'save-note':
@@ -1150,28 +1035,6 @@ document.addEventListener('keydown', (event) => {
   }
 
   render();
-});
-
-
-// =========================================
-// AI CHAT FORM
-// =========================================
-
-el.chatForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  const text = el.chatInput.value.trim();
-
-  if (
-    !text ||
-    chatBusy
-  ) {
-    return;
-  }
-
-  el.chatInput.value = '';
-
-  askAssistant(text);
 });
 
 
