@@ -148,6 +148,8 @@ let keyboardEnabled = true;
 let sidebarOpen = !shell.classList.contains('sidebar-collapsed');
 let graphOpen = shell.classList.contains('graph-open');
 const narrowViewport = window.matchMedia('(max-width: 760px)');
+const compactGraphViewport = window.matchMedia('(min-width: 761px) and (max-width: 1050px)');
+let sidebarOpenBeforeGraph = null;
 
 // Phone layout: start with the icon-rail sidebar and the graph closed,
 // so the calculator gets the full screen width.
@@ -474,6 +476,7 @@ function updateSidebarButtons() {
 
 function toggleSidebar() {
   sidebarOpen = !sidebarOpen;
+  sidebarOpenBeforeGraph = null;
 
   shell.classList.toggle(
     'sidebar-collapsed',
@@ -486,6 +489,23 @@ function toggleSidebar() {
 
 // RIGHT GRAPH SIDEBAR
 
+function syncGraphSidebarLayout() {
+  if (!graphOpen) return;
+
+  if (compactGraphViewport.matches && sidebarOpen) {
+    sidebarOpenBeforeGraph = sidebarOpen;
+    sidebarOpen = false;
+    shell.classList.add('sidebar-collapsed');
+  } else if (!compactGraphViewport.matches && !narrowViewport.matches && sidebarOpenBeforeGraph !== null) {
+    sidebarOpen = sidebarOpenBeforeGraph;
+    sidebarOpenBeforeGraph = null;
+    shell.classList.toggle('sidebar-collapsed', !sidebarOpen);
+  }
+
+  updateSidebarButtons();
+}
+
+
 function openGraphSidebar() {
   if (graphOpen) return;
 
@@ -493,7 +513,7 @@ function openGraphSidebar() {
 
   shell.classList.add('graph-open');
 
-  updateSidebarButtons();
+  syncGraphSidebarLayout();
 
   // Redraw after the graph sidebar starts opening.
   // ResizeObserver in graph-view.js handles canvas dimensions.
@@ -510,6 +530,12 @@ function closeGraphSidebar() {
   graphOpen = false;
 
   shell.classList.remove('graph-open');
+
+  if (sidebarOpenBeforeGraph !== null) {
+    sidebarOpen = sidebarOpenBeforeGraph;
+    sidebarOpenBeforeGraph = null;
+    shell.classList.toggle('sidebar-collapsed', !sidebarOpen);
+  }
 
   updateSidebarButtons();
 }
@@ -529,6 +555,7 @@ narrowViewport.addEventListener('change', ({ matches }) => {
 
   sidebarOpen = false;
   graphOpen = false;
+  sidebarOpenBeforeGraph = null;
   shell.classList.add('sidebar-collapsed');
   shell.classList.remove('graph-open');
   updateSidebarButtons();
@@ -537,6 +564,9 @@ narrowViewport.addEventListener('change', ({ matches }) => {
     window.dispatchEvent(new Event('resize'));
   });
 });
+
+compactGraphViewport.addEventListener('change', syncGraphSidebarLayout);
+syncGraphSidebarLayout();
 
 
 // =========================================
