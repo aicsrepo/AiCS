@@ -292,7 +292,7 @@ export function appShellHtml() {
                   <p class="eyebrow">Calculation steps</p>
                   <h2 id="solution-title">How it’s solved</h2>
                 </header>
-                <p class="solution-empty" id="solution-empty">Complete a calculation to see the steps.</p>
+                <p class="solution-empty" id="solution-empty">Complete a calculation to see the steps. Degree mode is selected by default: sin(30) means sin(30°). Use the Deg/Rad control to change angle units.</p>
                 <pre class="solution-steps" id="solution-steps" aria-live="polite" hidden></pre>
               </aside>
 
