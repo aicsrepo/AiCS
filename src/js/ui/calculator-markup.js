@@ -183,10 +183,6 @@ export function calculatorCardHtml() {
         <div class="num-pad">${keysHtml(NUMBER_KEYS)}</div>
       </div>
 
-      <span class="calc-screw calc-screw--tl" aria-hidden="true"></span>
-      <span class="calc-screw calc-screw--tr" aria-hidden="true"></span>
-      <span class="calc-screw calc-screw--bl" aria-hidden="true"></span>
-      <span class="calc-screw calc-screw--br" aria-hidden="true"></span>
 
     </section>`;
 }

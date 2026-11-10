@@ -675,7 +675,8 @@
 
 /* Moulded keyboard deck: slightly recessed panel behind the keys */
 .calc-deck {
-  margin: 0 -8px;
+  width: calc(100% - 8px);
+  margin: 0 auto;
   padding: 12px 10px 14px;
   border-radius: 22px;
   background:
@@ -686,24 +687,6 @@
     inset 0 -1px 0 rgba(255, 255, 255, .05),
     0 1px 0 rgba(255, 255, 255, .06);
 }
-
-/* Screws */
-.calc-screw {
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background:
-    linear-gradient(135deg, transparent 42%, rgba(0, 0, 0, .75) 43% 57%, transparent 58%),
-    radial-gradient(circle at 35% 30%, #8d929b, #4a4e56 55%, #2a2d32);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .25), 0 0 0 2px #17191d, 0 1px 0 3px rgba(255, 255, 255, .04);
-  pointer-events: none;
-}
-
-.calc-screw--tl { top: 14px; left: 16px; }
-.calc-screw--tr { top: 14px; right: 16px; }
-.calc-screw--bl { bottom: 14px; left: 16px; }
-.calc-screw--br { bottom: 14px; right: 16px; }
 
 /* Embossed model name */
 .calc-header { margin: 4px 14px 16px; }
@@ -1689,11 +1672,6 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-  }
-
-  .calc-deck {
-    width: 100%;
-    margin: 0;
   }
 
   .solution-panel {
