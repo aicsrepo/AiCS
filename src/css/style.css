@@ -151,8 +151,16 @@ button {
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
+}
+
+.header-logo {
+  display: block;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 3px 8px rgba(90, 126, 255, .28));
 }
 
 .app-title {
@@ -326,6 +334,8 @@ button {
   width: 0;
   min-width: 0;
   padding: 26px;
+  container-name: main-content;
+  container-type: inline-size;
 
   overflow-y: auto;
 

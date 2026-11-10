@@ -158,6 +158,23 @@ export function appShellHtml() {
       <header class="app-header">
 
         <div class="header-brand">
+          <svg
+            class="header-logo"
+            viewBox="0 0 40 40"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient id="header-logo-gradient" x1="4" y1="4" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#82b5ff" />
+                <stop offset="1" stop-color="#7054d8" />
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#header-logo-gradient)" />
+            <circle cx="20" cy="20" r="13" fill="none" stroke="white" stroke-opacity=".22" />
+            <path d="M8.5 22c3.8 0 3.8-9 7.6-9s3.8 14 7.6 14 3.8-9 7.8-9" fill="none" stroke="white" stroke-linecap="round" stroke-width="2.2" />
+            <circle cx="31" cy="9" r="1.5" fill="white" />
+          </svg>
           <h1 class="app-title">AiCS</h1>
         </div>
 

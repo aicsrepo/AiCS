@@ -147,10 +147,11 @@ let keyboardEnabled = true;
 
 let sidebarOpen = !shell.classList.contains('sidebar-collapsed');
 let graphOpen = shell.classList.contains('graph-open');
+const narrowViewport = window.matchMedia('(max-width: 760px)');
 
 // Phone layout: start with the icon-rail sidebar and the graph closed,
 // so the calculator gets the full screen width.
-if (window.matchMedia('(max-width: 760px)').matches) {
+if (narrowViewport.matches) {
   shell.classList.add('sidebar-collapsed');
   shell.classList.remove('graph-open');
   sidebarOpen = false;
@@ -522,6 +523,20 @@ function toggleGraphSidebar() {
     openGraphSidebar();
   }
 }
+
+narrowViewport.addEventListener('change', ({ matches }) => {
+  if (!matches) return;
+
+  sidebarOpen = false;
+  graphOpen = false;
+  shell.classList.add('sidebar-collapsed');
+  shell.classList.remove('graph-open');
+  updateSidebarButtons();
+
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new Event('resize'));
+  });
+});
 
 
 // =========================================
