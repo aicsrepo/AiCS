@@ -51,6 +51,14 @@
    GLOBAL
    ========================================================= */
 
+@font-face {
+  font-family: "AGRESSIVE";
+  src: url("../assets/fonts/AGRESSIVE.otf") format("opentype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -149,8 +157,9 @@ button {
 
 .app-title {
   margin: 0;
+  font-family: "AGRESSIVE", var(--font-body);
   font-size: 1.125rem;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -.45px;
 }
 
