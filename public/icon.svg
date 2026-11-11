@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AiCS app icon">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#82b5ff"/>
+      <stop offset="1" stop-color="#7054d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="rgba(255,255,255,0.24)" stroke-width="8"/>
+  <path d="M110 276c48 0 48-118 95-118s47 180 94 180 47-118 96-118" fill="none" stroke="white" stroke-linecap="round" stroke-width="18"/>
+  <circle cx="386" cy="152" r="18" fill="white"/>
+</svg>

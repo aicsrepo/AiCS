@@ -178,6 +178,15 @@ export function appShellHtml() {
           <h1 class="app-title">AiCS</h1>
         </div>
 
+        <div class="header-actions">
+          <button
+            type="button"
+            id="install-app-button"
+            class="button install-button"
+            hidden
+          >Download app</button>
+        </div>
+
       </header>
 
       <!-- APPLICATION LAYOUT -->

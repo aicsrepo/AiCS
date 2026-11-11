@@ -45,6 +45,47 @@ const app = document.querySelector('#app');
 
 app.innerHTML = appShellHtml();
 
+const installButton = app.querySelector('#install-app-button');
+let deferredPrompt = null;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      await navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`);
+    } catch (error) {
+      console.warn('Service worker registration failed:', error);
+    }
+  });
+}
+
+if (installButton) {
+  installButton.hidden = true;
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    installButton.hidden = false;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    installButton.hidden = true;
+  });
+
+  installButton.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const choiceResult = await deferredPrompt.userChoice;
+
+    if (choiceResult.outcome === 'accepted') {
+      installButton.hidden = true;
+    }
+
+    deferredPrompt = null;
+  });
+}
+
 const query = (selector) => app.querySelector(selector);
 
 // IMPORTANT:
